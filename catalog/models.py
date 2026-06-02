@@ -71,7 +71,3 @@ class Product(models.Model):
 
     def __str__(self) -> str:
         return self.name
-
-    def get_absolute_url(self) -> str:
-        """Return the canonical URL for the product listing page."""
-        return reverse("catalog:product_list")
