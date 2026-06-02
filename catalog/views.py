@@ -6,11 +6,26 @@ from django.shortcuts import render
 from .models import Category, Product, Tag
 
 
+def _clean_tag_filters(raw_tag_slugs):
+    """Normalize repeated tag query parameters into a unique, non-empty slug list."""
+    seen = set()
+    cleaned_slugs = []
+
+    for raw_slug in raw_tag_slugs:
+        slug = raw_slug.strip()
+        if not slug or slug in seen:
+            continue
+        seen.add(slug)
+        cleaned_slugs.append(slug)
+
+    return cleaned_slugs
+
+
 def product_list(request):
     """List active products with optional `q`, `category`, and repeated `tags` filters."""
     search_query = request.GET.get("q", "").strip()
     selected_category = request.GET.get("category", "").strip()
-    selected_tags = [tag_slug for tag_slug in request.GET.getlist("tags") if tag_slug]
+    selected_tags = _clean_tag_filters(request.GET.getlist("tags"))
 
     products = (
         Product.objects.filter(is_active=True)
