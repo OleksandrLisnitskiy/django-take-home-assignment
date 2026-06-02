@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Product Search</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #1f2933;
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 20px 48px;
+        }
+
+        .header {
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+        }
+
+        .layout {
+            display: grid;
+            gap: 24px;
+            grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+        }
+
+        .panel,
+        .product-card {
+            background-color: #ffffff;
+            border: 1px solid #d9e2ec;
+            border-radius: 10px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+        }
+
+        .panel {
+            padding: 20px;
+        }
+
+        .panel h2,
+        .results-header h2 {
+            margin-top: 0;
+            font-size: 1.25rem;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label,
+        .tag-group-title {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .field input[type="search"],
+        .field select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #bcccdc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font: inherit;
+        }
+
+        .tag-options {
+            display: grid;
+            gap: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding: 12px;
+            border: 1px solid #d9e2ec;
+            border-radius: 8px;
+            background-color: #f8fafc;
+        }
+
+        .tag-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 16px;
+            border: 0;
+            border-radius: 8px;
+            background-color: #1f6feb;
+            color: #ffffff;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .button-link {
+            color: #1f6feb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .results-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .product-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .product-card {
+            padding: 20px;
+        }
+
+        .product-card h3 {
+            margin: 0 0 8px;
+            font-size: 1.2rem;
+        }
+
+        .product-meta {
+            margin: 0 0 10px;
+            color: #52606d;
+        }
+
+        .product-description {
+            margin: 0 0 14px;
+            line-height: 1.5;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .tag-pill {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background-color: #e6f0ff;
+            color: #174ea6;
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            padding: 24px;
+            text-align: center;
+            color: #52606d;
+        }
+
+        @media (max-width: 800px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="header">
+            <h1>Product Search</h1>
+            <p>Search and filter active products by keyword, category, and tags.</p>
+        </header>
+
+        <div class="layout">
+            <aside class="panel">
+                <h2>Filters</h2>
+                <form method="get">
+                    <div class="field">
+                        <label for="id_q">Search</label>
+                        <input
+                            id="id_q"
+                            type="search"
+                            name="q"
+                            value="{{ search_query }}"
+                            placeholder="Search by name or description"
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label for="id_category">Category</label>
+                        <select id="id_category" name="category">
+                            <option value="">All categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.slug }}" {% if selected_category == category.slug %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <span class="tag-group-title">Tags</span>
+                        <div class="tag-options">
+                            {% for tag in tags %}
+                                <label class="tag-option" for="tag-{{ forloop.counter }}">
+                                    <input
+                                        id="tag-{{ forloop.counter }}"
+                                        type="checkbox"
+                                        name="tags"
+                                        value="{{ tag.slug }}"
+                                        {% if tag.slug in selected_tags %}checked{% endif %}
+                                    >
+                                    <span>{{ tag.name }}</span>
+                                </label>
+                            {% empty %}
+                                <p>No tags available.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button class="button" type="submit">Apply Filters</button>
+                        <a class="button-link" href="{% url 'catalog:product_list' %}">Clear filters</a>
+                    </div>
+                </form>
+            </aside>
+
+            <main>
+                <div class="results-header">
+                    <h2>Results</h2>
+                    <p>{{ result_count }} product{{ result_count|pluralize }}</p>
+                </div>
+
+                {% if products %}
+                    <div class="product-list">
+                        {% for product in products %}
+                            <article class="product-card">
+                                <h3>{{ product.name }}</h3>
+                                <p class="product-meta">
+                                    Category: {{ product.category.name }} | Price: ${{ product.price }}
+                                </p>
+                                <p class="product-description">
+                                    {{ product.description|default:"No description provided." }}
+                                </p>
+                                <ul class="tag-list">
+                                    {% for tag in product.tags.all %}
+                                        <li class="tag-pill">{{ tag.name }}</li>
+                                    {% empty %}
+                                        <li class="tag-pill">No tags</li>
+                                    {% endfor %}
+                                </ul>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="panel empty-state">
+                        <p>No products match the current search and filter criteria.</p>
+                    </div>
+                {% endif %}
+            </main>
+        </div>
+    </div>
+</body>
+</html>
