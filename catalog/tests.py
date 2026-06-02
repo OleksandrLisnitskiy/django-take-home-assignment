@@ -108,6 +108,17 @@ class ProductListViewTests(TestCase):
         self.assertNotContains(response, self.gloves.name)
         self.assertNotContains(response, self.vest.name)
 
+    def test_filtering_by_multiple_tags_requires_all_valid_tags(self):
+        """Repeated tag filters should return products that match every valid tag slug."""
+        response = self.client.get(
+            self.url,
+            {"tags": [self.ppe.slug, self.warehouse.slug]},
+        )
+
+        self.assertContains(response, self.gloves.name)
+        self.assertNotContains(response, self.cable.name)
+        self.assertNotContains(response, self.vest.name)
+
     def test_combining_search_category_and_tag_filters(self):
         """Search, category, and tag filters work together as one narrowed query."""
         response = self.client.get(
@@ -156,6 +167,20 @@ class ProductListViewTests(TestCase):
         self.assertContains(response, self.cable.name)
         self.assertNotContains(response, self.gloves.name)
         self.assertEqual(response.context["selected_tags"], [self.low_voltage.slug, "missing-tag"])
+
+    def test_result_count_matches_combined_filter_results(self):
+        """The reported result count should stay aligned with the rendered queryset."""
+        response = self.client.get(
+            self.url,
+            {
+                "q": "warehouse",
+                "category": self.safety.slug,
+                "tags": [self.ppe.slug, self.warehouse.slug],
+            },
+        )
+
+        self.assertEqual(response.context["result_count"], 1)
+        self.assertContains(response, self.gloves.name)
 
     def test_query_parameters_with_sql_like_input_do_not_break_the_view(self):
         """Hostile-looking input should be treated as plain text and return safely."""

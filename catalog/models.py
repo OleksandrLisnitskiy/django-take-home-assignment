@@ -4,7 +4,6 @@ from decimal import Decimal
 
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.urls import reverse
 
 
 class Category(models.Model):

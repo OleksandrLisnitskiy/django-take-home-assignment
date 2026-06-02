@@ -26,6 +26,9 @@ def product_list(request):
     search_query = request.GET.get("q", "").strip()
     selected_category = request.GET.get("category", "").strip()
     selected_tags = _clean_tag_filters(request.GET.getlist("tags"))
+    
+    categories = Category.objects.all()
+    tags = Tag.objects.all()
 
     products = (
         Product.objects.filter(is_active=True)
@@ -45,8 +48,6 @@ def product_list(request):
         # Multiple tag joins can duplicate rows, so the result set is de-duplicated.
         products = products.filter(tags__slug__in=selected_tags).distinct()
 
-    categories = Category.objects.all()
-    tags = Tag.objects.all()
 
     context = {
         "products": products,

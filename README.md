@@ -1,4 +1,4 @@
-# Remarcable Django Take-Home Assignment
+# Django Take-Home Assignment
 
 A Django application that models products, categories, and tags, with search and filtering functionality.
 
@@ -124,7 +124,7 @@ The catalog homepage supports the following query parameters:
 python manage.py test
 ```
 
-## AI-Assistence
+## AI Assistance
 
 All AI-generated output was reviewed, modified, and expanded before being incorporated into the project.
 
