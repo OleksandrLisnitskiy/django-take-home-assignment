@@ -1,3 +1,3 @@
-from django.test import TestCase
+"""Tests for the catalog application."""
 
-# Create your tests here.
+from django.test import TestCase
