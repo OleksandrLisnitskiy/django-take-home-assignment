@@ -25,6 +25,8 @@ A Django application that models products, categories, and tags, with search and
 
 ## Setup
 
+Before starting, make sure Python 3 is installed on your machine and available on your command line.
+
 1. Clone the repository:
 
 ```bash
@@ -33,6 +35,14 @@ cd django-take-home-assignment
 ```
 
 2. Create a virtual environment:
+
+Windows PowerShell:
+
+```powershell
+py -3 -m venv .venv
+```
+
+macOS/Linux:
 
 ```bash
 python3 -m venv .venv
@@ -54,11 +64,27 @@ source .venv/bin/activate
 
 4. Install dependencies:
 
+Windows PowerShell:
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
+macOS/Linux:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 5. Apply database migrations:
+
+Windows PowerShell:
+
+```powershell
+python manage.py migrate
+```
+
+macOS/Linux:
 
 ```bash
 python3 manage.py migrate
@@ -66,17 +92,41 @@ python3 manage.py migrate
 
 6. Create a superuser for admin access:
 
+Windows PowerShell:
+
+```powershell
+python manage.py createsuperuser
+```
+
+macOS/Linux:
+
 ```bash
 python3 manage.py createsuperuser
 ```
 
 7. Optionally seed sample data for review:
 
+Windows PowerShell:
+
+```powershell
+python manage.py seed_sample_data
+```
+
+macOS/Linux:
+
 ```bash
 python3 manage.py seed_sample_data
 ```
 
 8. Run the development server:
+
+Windows PowerShell:
+
+```powershell
+python manage.py runserver
+```
+
+macOS/Linux:
 
 ```bash
 python3 manage.py runserver
