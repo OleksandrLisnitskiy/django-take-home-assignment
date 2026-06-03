@@ -35,7 +35,7 @@ cd django-take-home-assignment
 2. Create a virtual environment:
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 ```
 
 3. Activate the virtual environment:
@@ -58,28 +58,28 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-5. Run migrations:
+5. Apply database migrations:
 
 ```bash
-python manage.py migrate
+python3 manage.py migrate
 ```
 
-6. Create a superuser:
+6. Create a superuser for admin access:
 
 ```bash
-python manage.py createsuperuser
+python3 manage.py createsuperuser
 ```
 
 7. Optionally seed sample data for review:
 
 ```bash
-python manage.py seed_sample_data
+python3 manage.py seed_sample_data
 ```
 
 8. Run the development server:
 
 ```bash
-python manage.py runserver
+python3 manage.py runserver
 ```
 
 9. Open the application homepage:
@@ -94,6 +94,8 @@ python manage.py runserver
 
 This assignment is designed with Django admin as the primary interface for managing catalog data. Reviewers can create and edit categories, tags, and products directly in the admin panel.
 
+When creating a product, selecting a category is required. Assigning tags is optional.
+
 For convenience, the project also includes a `seed_sample_data` management command to quickly populate realistic review data. This command exists to make evaluation easier and is not required for the core assignment workflow.
 
 ## Minimum Sample Data
@@ -105,6 +107,16 @@ The assignment expects at least:
 - 20 products
 
 The included `seed_sample_data` command exceeds that minimum and currently creates 6 categories, 13 tags, and 22 products.
+
+## Project Structure
+
+- `catalog/models.py`: Category, Tag, and Product models
+- `catalog/admin.py`: Admin registrations and configuration
+- `catalog/views.py`: Search and filter logic for the catalog page
+- `catalog/templates/catalog/product_list.html`: Simple HTML UI for search and filtering
+- `catalog/tests.py`: Integration tests for filtering and empty states
+- `catalog/management/commands/seed_sample_data.py`: Optional sample data loader
+- `catalog/migrations/`: Committed schema migrations
 
 ## Search and Filter Examples
 
@@ -121,7 +133,7 @@ The catalog homepage supports the following query parameters:
 ## Running Tests
 
 ```bash
-python manage.py test
+python3 manage.py test
 ```
 
 ## AI Assistance

@@ -108,16 +108,16 @@ class ProductListViewTests(TestCase):
         self.assertNotContains(response, self.gloves.name)
         self.assertNotContains(response, self.vest.name)
 
-    def test_filtering_by_multiple_tags_requires_all_valid_tags(self):
-        """Repeated tag filters should return products that match every valid tag slug."""
+    def test_filtering_by_multiple_tags_matches_any_selected_tag(self):
+        """Repeated tag filters should return products linked to any selected tag slug."""
         response = self.client.get(
             self.url,
             {"tags": [self.ppe.slug, self.warehouse.slug]},
         )
 
         self.assertContains(response, self.gloves.name)
-        self.assertNotContains(response, self.cable.name)
-        self.assertNotContains(response, self.vest.name)
+        self.assertContains(response, self.cable.name)
+        self.assertContains(response, self.vest.name)
 
     def test_combining_search_category_and_tag_filters(self):
         """Search, category, and tag filters work together as one narrowed query."""
