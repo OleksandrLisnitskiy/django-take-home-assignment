@@ -255,14 +255,14 @@
 
                 {% if products %}
                     <div class="product-list">
-                        {% for product in products %}
+                        {% for product, names, descriptions in products %}
                             <article class="product-card">
-                                <h3>{{ product.name }}</h3>
+                                <h3>{% for part, is_match in names %}{% if is_match %}<mark>{{ part }}</mark>{% else %}{{ part }}{% endif %}{% endfor %}</h3>
                                 <p class="product-meta">
                                     Category: {{ product.category.name }} | Price: ${{ product.price }}
                                 </p>
-                                <p class="product-description">
-                                    {{ product.description|default:"No description provided." }}
+                                <p class="product-description">{% for part, is_match in descriptions %}{% if is_match %}<mark>{{ part }}</mark>{% else %}{{ part }}{% endif %}{% endfor %}
+                                    {% comment %} {{ product.description|default:"No description provided." }} {% endcomment %}
                                 </p>
                                 <ul class="tag-list">
                                     {% for tag in product.tags.all %}
